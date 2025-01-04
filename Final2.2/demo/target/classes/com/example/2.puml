@@ -1,0 +1,87 @@
+@startuml 1
+
+' Warehouse class and its interactions with other classes
+class Warehouse {
+    -BlockingQueue<Package> highPriorityQueue
+    -BlockingQueue<Package> regularPriorityQueue
+    -List<String> operationLogs
+    +Warehouse(int highPriorityCapacity, int regularPriorityCapacity)
+    +void storePackage(Package p)
+    +Package retrievePackage()
+    +void logOperation(String operation)
+    +List<String> getOperationLogs()
+    +BlockingQueue<Package> getHighPriorityQueue()
+    +BlockingQueue<Package> getRegularPriorityQueue()
+    +int getCurrentCapacity()
+    +int getTotalCapacity()
+}
+
+' Package class
+class Package {
+    -long id
+    -String status
+    -String priority
+    -long lastUpdateTime
+    +long getId()
+    +String getStatus()
+    +void setStatus(String status)
+    +String getPriority()
+    +void setPriority(String priority)
+    +long getLastUpdateTime()
+    +void updateLastUpdateTime()
+    +String toString()
+}
+
+' Task class for handling priority upgrade
+class Task {
+    -Warehouse warehouse
+    +Task(Warehouse warehouse)
+    +void run()
+}
+
+' ArrivalTruck class (handles arrival of trucks)
+class ArrivalTruck {
+    -Warehouse warehouse
+    +ArrivalTruck(Warehouse warehouse)
+    +void run()
+}
+
+' DepartureTruck class (handles departure of trucks)
+class DepartureTruck {
+    -Warehouse warehouse
+    +DepartureTruck(Warehouse warehouse)
+    +void run()
+}
+
+' GUI Class (handles graphical user interface)
+class GUI {
+    -Warehouse warehouse
+    -ListView<String> operationLog
+    -TextArea statusArea
+    -PieChart priorityChart
+    -Label capacityLabel
+    -TextField searchField
+    +start(Stage primaryStage)
+    +PieChart createPieChart()
+    +void updateWarehouseStatus()
+    +void updateLogs()
+    +void updateChart()
+    +void startTrucks()
+    +void stopTrucks()
+    +void searchPackageById()
+}
+
+' Relationships
+
+Warehouse "1" *-- "1..*" Package : stores
+Warehouse "1" *-- "1..*" Task : manages
+Warehouse "1" *-- "1..*" ArrivalTruck : manages
+Warehouse "1" *-- "1..*" DepartureTruck : manages
+Warehouse "1" *-- "1" GUI : controls
+Package "1" *-- "0..*" Task : updatesPriority
+Task "1" *-- "1" Warehouse : interacts with
+ArrivalTruck "1" *-- "1" Warehouse : interacts with
+DepartureTruck "1" *-- "1" Warehouse : interacts with
+GUI "1" *-- "1" Warehouse : interacts with
+
+@enduml

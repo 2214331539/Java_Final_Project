@@ -1,0 +1,70 @@
+@startuml a
+
+' Define the abstract base class 'Transport'
+class Transport {
+    - String vehicleID
+    - String route
+    - int capacity
+    - String status
+    + String toString()
+}
+
+' Define the 'Bus' class which inherits from 'Transport' and implements 'WiFiEnabled'
+class Bus {
+    - Boolean hasWiFi
+    + Bus(vehicleID: String, route: String, capacity: int, status: String, hasWiFi: Boolean)
+    + Boolean isWiFiAvailable()
+}
+
+' Define the 'Train' class which inherits from 'Transport'
+class Train {
+    - int numberOfCarriages
+    - String fuelType
+    + Train(vehicleID: String, route: String, capacity: int, status: String, numberOfCarriages: int, fuelType: String)
+}
+
+' Define the 'Metro' class which inherits from 'Transport'
+class Metro {
+    - Boolean isUnderground
+    + Metro(vehicleID: String, route: String, capacity: int, status: String, isUnderground: Boolean)
+}
+
+' Define the 'WiFiEnabled' interface
+interface WiFiEnabled {
+    + Boolean isWiFiAvailable()
+}
+
+' Define the 'Server' class
+class Server {
+    + static void main(args: String[])
+    + static String getKeys(message: String)
+}
+
+' Define the 'UpdateLogThread' class
+class UpdateLogThread {
+    - Transport transportation
+    + UpdateLogThread(transportation: Transport)
+    + void run()
+}
+
+' Define the 'Client' class
+class Client {
+    + static void main(args: String[])
+}
+
+' Relationships
+Transport <|-- Bus
+Transport <|-- Train
+Transport <|-- Metro
+Bus ..|> WiFiEnabled : implements
+
+' Server class uses Transport (for the vehicles array)
+Server --> Transport : uses
+
+' UpdateLogThread class uses Transport (for logging purposes)
+UpdateLogThread --> Transport : uses
+
+' Client class interacts with Server
+Client --> Server : interacts
+
+@enduml
